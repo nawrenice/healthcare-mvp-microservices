@@ -1,0 +1,23 @@
+# Build files
+target/
+build/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Env files / secrets
+.env
+.env.*
+src/main/resources/application-local.properties
+
+# Node (if frontend added later)
+node_modules/
