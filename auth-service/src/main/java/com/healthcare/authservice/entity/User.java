@@ -13,7 +13,7 @@ import lombok.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)     //auto-increment primary key
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
