@@ -1,0 +1,47 @@
+STATELESS VS STATEFUL
+
+Stateful (Barista): You walk in and say, "The usual, please." The barista remembers you from
+yesterday and knows exactly what you want.
+The "state" (your preference) is stored in the barista's head.
+
+Stateless (Vending Machine): The machine has no idea who you are. Every time you want a soda,
+ you must provide the money and press the button. It doesn't care if you bought ten sodas a minute ago;
+  each transaction is brand new.
+
+How it Works in Software:
+
+In a stateless architecture, the server does not store any information about the user's previous requests.
+Every single request sent from the client (your Java app or browser) must contain all the information needed
+to identify the user and complete the task.
+
+The Stateful Way (Traditional)
+
+Client: "Login me in. I'm Adam."
+
+Server: "Okay, I'll save 'Adam is logged in' in my memory (Session)."
+
+Client: "Show me my profile."
+
+Server: "Checking my memory... ah yes, you are Adam. Here is your profile."
+
+The Stateless Way (Modern/JWT)
+
+Client: "Login me in. I'm Adam."
+
+Server: "Here is a signed JWT that says you are Adam. I'm going to forget we ever spoke."
+
+Client: "Show me my profile. (Attaches JWT)"
+
+Server: "I don't know you, but this JWT is valid and says you are Adam. Here is your profile."
+
+Why Stateless is Better for Scaling
+
+This is the "magic" reason why statelessness is so popular in modern Java development: Horizontal Scaling.
+
+If you have a massive app with 5 different servers, a stateless request can go to any of them.
+
+In a Stateful app: If you log in on Server A, but your next request goes to Server B, Server B will
+say "I don't know who you are!" because your session is stuck in Server A's memory.
+
+In a Stateless app: Since the "ID card" (the JWT) is in the request itself, Server B can validate it
+just as easily as Server A. It doesn't need to "remember" anything.

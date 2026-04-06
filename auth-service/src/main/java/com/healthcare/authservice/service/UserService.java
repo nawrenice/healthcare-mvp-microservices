@@ -61,7 +61,8 @@ public class UserService {
 
         return new ApiResponse(
                 true,
-                "User registered successfully"
+                "User registered successfully",
+                201
         );
 
     }
