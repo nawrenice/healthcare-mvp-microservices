@@ -44,6 +44,7 @@ public class JwtService {
         return Jwts.builder()
                 .subject(user.getEmail())   //main identity inside token
                 .claim("role", user.getRole().name())   //Add role for authorization use later
+                .claim("authUserId", user.getId())
                 .issuedAt(now)      //Token issued time
                 .expiration(expiryDate) //Token expiry time
                 .signWith(secretKey)        //Sign token with secret key
