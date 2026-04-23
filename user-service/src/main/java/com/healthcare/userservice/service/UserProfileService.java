@@ -40,11 +40,13 @@ public class UserProfileService {
         return mapToResponse(savedProfile);
     }
 
-    public UserProfileResponse createProfile(CreateUserProfileRequest request){
+    public UserProfileResponse createProfile(Long authUserId, CreateUserProfileRequest request){
+        //Check if profile already exists for this auth user
         if(userProfileRepository.existsByAuthUserId(request.getAuthUserId())){
             throw new DuplicateUserProfileException("User profile already exists for authUserId : " +request.getAuthUserId());
         }
 
+        //create new entity
         UserProfile userProfile = UserProfile.builder()
                 .authUserId(request.getAuthUserId())
                 .name(request.getName())
@@ -54,8 +56,10 @@ public class UserProfileService {
                 .gender(request.getGender())
                 .build();
 
+        //save to DB
         UserProfile savedProfile = userProfileRepository.save(userProfile);
 
+        //convert to response DTO
         return mapToResponse(savedProfile);
     }
 
