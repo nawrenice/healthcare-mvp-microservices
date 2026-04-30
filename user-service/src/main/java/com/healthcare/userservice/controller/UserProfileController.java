@@ -127,7 +127,7 @@ public class UserProfileController {
      * Only PATIENT users can UPDATE their own profile
      */
     @PreAuthorize("hasRole('PATIENT')")
-    @PutMapping("/me")
+    @PatchMapping("/me")
     public ResponseEntity<UserProfileResponse> updateMyProfile(
             @Valid @RequestBody UpdateUserProfileRequest request,
             @AuthenticationPrincipal CustomUserPrincipal principal

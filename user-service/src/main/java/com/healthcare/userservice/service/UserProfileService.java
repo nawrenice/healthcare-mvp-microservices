@@ -29,11 +29,22 @@ public class UserProfileService {
         UserProfile existingProfile = userProfileRepository.findByAuthUserId(authUserId)
                 .orElseThrow(()-> new UserProfileNotFoundException("User profile not found with authUserId : " +authUserId));
 
-        existingProfile.setName(request.getName());
-        existingProfile.setPhone(request.getPhone());
-        existingProfile.setAddress(request.getAddress());
-        existingProfile.setDateOfBirth(request.getDateOfBirth());
-        existingProfile.setGender(request.getGender());
+        //Update only if value is provided in request
+        if(request.getName() != null) {
+            existingProfile.setName(request.getName());
+        }
+        if(request.getPhone() != null) {
+            existingProfile.setPhone(request.getPhone());
+        }
+        if(request.getAddress() != null) {
+            existingProfile.setAddress(request.getAddress());
+        }
+        if(request.getDateOfBirth() != null) {
+            existingProfile.setDateOfBirth(request.getDateOfBirth());
+        }
+        if(request.getGender() != null) {
+            existingProfile.setGender(request.getGender());
+        }
 
         UserProfile savedProfile = userProfileRepository.save(existingProfile);
 
