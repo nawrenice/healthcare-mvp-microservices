@@ -18,6 +18,17 @@ class ProfileApiTests extends ApiTestSupport {
         mvc.perform(get("/api/user-profiles/me").header("Authorization", token(101, "PATIENT")))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.authUserId").value(101));
     }
+    @Test void profileUpdateSupportsPortalAndExistingClients() throws Exception {
+        String payload = """
+                {"name":"Profile Update","address":"Synthetic address","gender":"unspecified"}
+                """;
+        mvc.perform(post("/api/user-profiles").header("Authorization", token(202, "PATIENT"))
+                .contentType("application/json").content(payload)).andExpect(status().isCreated());
+        mvc.perform(put("/api/user-profiles/me").header("Authorization", token(202, "PATIENT"))
+                .contentType("application/json").content(payload)).andExpect(status().isOk());
+        mvc.perform(patch("/api/user-profiles/me").header("Authorization", token(202, "PATIENT"))
+                .contentType("application/json").content(payload)).andExpect(status().isOk());
+    }
     @Test void rejectsMissingMalformedAndWrongRoleTokens() throws Exception {
         mvc.perform(get("/api/user-profiles/me")).andExpect(status().isUnauthorized());
         mvc.perform(get("/api/user-profiles/me").header("Authorization", "Bearer"))

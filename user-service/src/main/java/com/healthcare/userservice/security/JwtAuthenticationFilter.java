@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         email,
                         role
                 );
-                System.out.println("JWT authuserID : " + authUserId);
+
 
                 //Convert JWT role into spring security authority
                 //Example: PATIENT -> ROLE_PATIENT

@@ -96,3 +96,5 @@ Start with [the learning guide](docs/LEARNING_GUIDE.md), [recovered goals](docs/
 ## Scope and next steps
 
 This is a demonstrable scheduling MVP using synthetic information. It is not a complete EHR, a clinically validated product, or a production-ready replacement for Epic. Clinical documentation, medication workflows, laboratory integration, billing, interoperability, and operational safeguards remain future work. See [the roadmap](docs/ROADMAP.md) for concrete stages and acceptance criteria.
+
+See [reference reconciliation](docs/REFERENCE_BRANCH.md) for differences from your dev implementation.

@@ -31,3 +31,5 @@ The implementation was built with Java 21. The Java suite and a real HTTP smoke 
 HMAC issuer verification, staff identity approval, password recovery, token revocation, database migrations, audit trails, clinical features, accessibility review, and cloud operations remain follow-ups. This review is a development review, not an external security assessment or compliance certification.
 
 Official compatibility reference: https://springdoc.org/ (Spring Boot 4.0.x / springdoc 3.0.x).
+
+Branch reconciliation: the baseline described above was main. The reference branch now also includes dev commit 9a83981 and its doctor-service work. See REFERENCE_BRANCH.md for the reconciled API and configuration differences.
