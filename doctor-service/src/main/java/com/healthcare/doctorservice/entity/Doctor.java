@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity             // Marks this class as a JPA entity (mapped to a database table)
 @Table(name ="doctors")

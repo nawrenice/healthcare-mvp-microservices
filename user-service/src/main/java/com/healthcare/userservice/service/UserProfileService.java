@@ -53,13 +53,13 @@ public class UserProfileService {
 
     public UserProfileResponse createProfile(Long authUserId, CreateUserProfileRequest request){
         //Check if profile already exists for this auth user
-        if(userProfileRepository.existsByAuthUserId(request.getAuthUserId())){
-            throw new DuplicateUserProfileException("User profile already exists for authUserId : " +request.getAuthUserId());
+        if(userProfileRepository.existsByAuthUserId(authUserId)){
+            throw new DuplicateUserProfileException("User profile already exists for authUserId : " +authUserId);
         }
 
         //create new entity
         UserProfile userProfile = UserProfile.builder()
-                .authUserId(request.getAuthUserId())
+                .authUserId(authUserId)
                 .name(request.getName())
                 .phone(request.getPhone())
                 .address(request.getAddress())

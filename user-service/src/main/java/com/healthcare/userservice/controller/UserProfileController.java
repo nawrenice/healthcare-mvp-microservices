@@ -64,7 +64,8 @@ public class UserProfileController {
     /*
      * Only PATIENT users can CREATE their own profile
      */
-    @PreAuthorize("hasRole('PATIENT')")
+//    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<UserProfileResponse> createProfile(
             @Valid @RequestBody CreateUserProfileRequest request,
@@ -96,7 +97,8 @@ public class UserProfileController {
     /*
      * Only PATIENT users can FETCH their own profile
      */
-    @PreAuthorize(("hasRole('PATIENT')"))
+//    @PreAuthorize(("hasRole('PATIENT')"))
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponse> getMyProfile(
             @AuthenticationPrincipal CustomUserPrincipal principal
@@ -126,7 +128,8 @@ public class UserProfileController {
     /*
      * Only PATIENT users can UPDATE their own profile
      */
-    @PreAuthorize("hasRole('PATIENT')")
+//    @PreAuthorize("hasRole('PATIENT')")
+    @PreAuthorize("isAuthenticated()")
     @PatchMapping("/me")
     public ResponseEntity<UserProfileResponse> updateMyProfile(
             @Valid @RequestBody UpdateUserProfileRequest request,

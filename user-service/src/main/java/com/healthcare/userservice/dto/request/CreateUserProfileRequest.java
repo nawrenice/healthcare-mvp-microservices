@@ -1,7 +1,6 @@
 package com.healthcare.userservice.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -12,9 +11,9 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CreateUserProfileRequest {
-
-    @NotNull(message = "authUserId is required")
-    private Long authUserId;
+//
+//    @NotNull(message = "authUserId is required")
+//    private Long authUserId;
 
     @NotBlank(message = "fullName is required")
     private String name;

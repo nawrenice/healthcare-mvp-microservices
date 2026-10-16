@@ -48,11 +48,11 @@ public class GlobalExceptionHandler {
         ApiResponse response = ApiResponse.builder()
                 .success(false)
                 .message(ex.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value()) // 400
+                .status(HttpStatus.CONFLICT.value()) // 409
                 .timeStamp(LocalDateTime.now())
                 .build();
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
     // Handles validation errors from @Valid.
@@ -83,6 +83,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGenericException(Exception ex) {
 
+        // Temporary debugging:
+        // Prints the complete exception in the application terminal.
+        ex.printStackTrace();
         ApiResponse response = ApiResponse.builder()
                 .success(false)
                 .message("Something went wrong")
