@@ -21,3 +21,8 @@ src/main/resources/application-local.properties
 
 # Node (if frontend added later)
 node_modules/
+
+# Local demo processes and Python caches
+.runtime/
+__pycache__/
+*.pyc

@@ -1,6 +1,7 @@
 package com.healthcare.userservice.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -11,11 +12,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CreateUserProfileRequest {
-//
-//    @NotNull(message = "authUserId is required")
-//    private Long authUserId;
+
+    // Identity comes from the verified JWT, never from editable request fields.
 
     @NotBlank(message = "fullName is required")
+    @jakarta.validation.constraints.Size(max = 255)
     private String name;
 
     @Pattern(
@@ -25,12 +26,14 @@ public class CreateUserProfileRequest {
     private String phone;
 
     @NotBlank(message = "address is required")
+    @jakarta.validation.constraints.Size(max = 255)
     private String address;
 
     @Past(message = "dateOfBirth must be a past date")
     private LocalDate dateOfBirth;
 
     @NotBlank(message = "gender is required")
+    @jakarta.validation.constraints.Size(max = 255)
     private String gender;
 
 }

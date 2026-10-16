@@ -8,143 +8,81 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
 
-/*
- * ============================================================
- *                 JWT AUTHENTICATION FILTER
- * ============================================================
- *
- * Request Flow:
- *
- * Client sends request with JWT token
- *        │
- *        ▼
- * JwtAuthenticationFilter  ← This class
- *        │
- *        ├── Reads Authorization header
- *        ├── Extracts token
- *        ├── Validates token using JwtService
- *        ├── Creates CustomUserPrincipal
- *        ├── Stores user in Spring Security
- *        ▼
- * DoctorController
- *
- * Purpose:
- * This filter runs before controller methods and prepares the
- * authenticated user for the current request.
- */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+
     private final JwtService jwtService;
 
-    /*
-     * Runs once for every incoming HTTP request.
-     *
-     * Why do we need this?
-     * Before a protected controller endpoint is reached, we need
-     * to check whether the request has a valid JWT token.
-     *
-     * Important:
-     * Controllers should not parse JWT tokens directly.
-     * This filter handles authentication before the request reaches
-     * the controller.
-     */
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        // 1. Read authorization header
         String authHeader = request.getHeader("Authorization");
+        // Never log bearer tokens: anyone holding one can use the account.
 
-        /*
-         * If the request does not contain a Bearer token,
-         * we do not authenticate the user here.
-         *
-         * The request continues, and Spring Security will decide
-         * whether the endpoint is public or protected.
-         */
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // 2. If header is missing or does not start with "Bearer", skip this filter and continue the request normally
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
             return;
         }
 
-        /*
-         * Remove "Bearer " from the header so only the JWT token remains.
-         *
-         * Example:
-         * Authorization: Bearer abc.def.ghi
-         *
-         * token = abc.def.ghi
-         */
+        // 3. Remove "Bearer" prefix and keep only jwt token
         String token = authHeader.substring(7);
 
-        /*
-         * Validate the token before trusting any information inside it.
-         *
-         * If the token is expired, modified, or signed with the wrong secret,
-         * we do not create an authenticated user.
-         */
-        if (!jwtService.isTokenValid(token)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        try{
+            // 4. Extract values from token using JwtService
+            String email = jwtService.extractUsername(token);
+            String role = jwtService.extractRole(token);
+            Long authUserId = jwtService.extractAuthUserId(token);
 
-        Long authUserId = jwtService.extractAuthUserId(token);
-        String email = jwtService.extractEmail(token);
-        String role = jwtService.extractRole(token);
+            // 5. Check if token is not expired before trusting it
+            if(email != null && authUserId != null && authUserId > 0 &&
+                    List.of("PATIENT", "DOCTOR", "ADMIN", "RECEPTION").contains(role) && !jwtService.isTokenExpired(token)){
+                // 6. Create our custom principal object
+                CustomUserPrincipal principal = new CustomUserPrincipal(
+                        authUserId,
+                        email,
+                        role
+                );
 
-        /*
-         * Create our application's logged-in user object.
-         *
-         * This is the "badge" created after the JWT has been verified.
-         */
-        CustomUserPrincipal principal =
-                new CustomUserPrincipal(authUserId, email, role);
+                //Convert JWT role into spring security authority
+                //Example: PATIENT -> ROLE_PATIENT
+                SimpleGrantedAuthority authority =
+                        new SimpleGrantedAuthority("ROLE_" +role);
 
-        /*
-         * Convert the user's role into a Spring Security authority.
-         *
-         * Spring Security expects roles in the format ROLE_DOCTOR,
-         * ROLE_PATIENT, ROLE_ADMIN, etc.
-         */
-        SimpleGrantedAuthority authority =
-                new SimpleGrantedAuthority("ROLE_" + role);
-
-        /*
-         * Create an authentication object for Spring Security.
-         *
-         * principal  = logged-in user information
-         * credentials = null because password is not needed after JWT validation
-         * authorities = user's role/permissions
-         */
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(
+                // 7. Create Spring security authentication object with principal + authorities
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         principal,
                         null,
                         List.of(authority)
                 );
 
-        /*
-         * Store the authenticated user in Spring Security for this request.
-         *
-         * After this, controller methods can access the user using:
-         *
-         * @AuthenticationPrincipal CustomUserPrincipal principal
-         */
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+                // 8. Add request details
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
 
-        /*
-         * Continue the request flow so it can reach the controller.
-         */
-        filterChain.doFilter(request, response);
+                // 9. Save authenticated user into security context
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            }
+        }catch (Exception ex){
+            // 10. If token is invalid/malformed/expired, clear context
+            SecurityContextHolder.clearContext();
+        }
+
+        //11. Continue filter chain
+        filterChain.doFilter(request,response);
+
     }
 }

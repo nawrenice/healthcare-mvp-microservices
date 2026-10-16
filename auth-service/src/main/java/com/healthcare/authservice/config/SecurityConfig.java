@@ -48,7 +48,7 @@ public class SecurityConfig {
 
                 //Define which endpoints are public and which are required authentication
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**",
+                        .requestMatchers("/api/auth/signup", "/api/auth/login", "/actuator/health",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",

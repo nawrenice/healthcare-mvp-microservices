@@ -1,39 +1,18 @@
 package com.healthcare.doctorservice.dto.response;
 
+import lombok.Builder;
+import lombok.Getter;
 
-import lombok.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)
+@Getter @Builder(toBuilder = true)
 public class DoctorProfileResponse {
-
-    // Local doctor-service profile ID
     private Long id;
-
-    // User ID from auth-service, extracted from JWT
     private Long authUserId;
-
-    private String specialization;
-
-    private Integer yearsOfExperience;
-
-    private String qualification;
-
-    private BigDecimal consultationFee;
-
-    private Boolean available;
-
-    private String hospitalName;
-
-    private String department;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
+    private String name;
+    private String specialty;
+    private String clinicAddress;
+    // Only populated for the owning doctor; omitted from public directory responses.
+    private String licenseNumber;
+    private boolean available;
+    // The directory does not expose private credential records or passwords.
 }

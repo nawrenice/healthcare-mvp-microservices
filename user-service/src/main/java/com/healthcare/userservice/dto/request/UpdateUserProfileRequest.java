@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class UpdateUserProfileRequest {
 
     @NotBlank(message = "fullName is required")
+    @jakarta.validation.constraints.Size(max = 255)
     private String name;
 
     @Pattern(
@@ -22,12 +23,14 @@ public class UpdateUserProfileRequest {
     private String phone;
 
     @NotBlank(message = "address is required")
+    @jakarta.validation.constraints.Size(max = 255)
     private String address;
 
     @Past(message = "dateOfBirth must be a past date")
     private LocalDate dateOfBirth;
 
     @NotBlank(message = "gender is required")
+    @jakarta.validation.constraints.Size(max = 255)
     private String gender;
 
 }

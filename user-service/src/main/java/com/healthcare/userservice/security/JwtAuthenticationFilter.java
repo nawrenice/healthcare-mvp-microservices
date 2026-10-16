@@ -28,10 +28,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         // 1. Read authorization header
         String authHeader = request.getHeader("Authorization");
-        System.out.println("Authorization Header = " + authHeader);
+        // Never log bearer tokens: anyone holding one can use the account.
 
         // 2. If header is missing or does not start with "Bearer", skip this filter and continue the request normally
-        if(authHeader == null || !authHeader.startsWith("Bearer")){
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,7 +46,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long authUserId = jwtService.extractAuthUserId(token);
 
             // 5. Check if token is not expired before trusting it
-            if(email != null && !jwtService.isTokenExpired(token)){
+            if(email != null && authUserId != null && authUserId > 0 &&
+                    List.of("PATIENT", "DOCTOR", "ADMIN", "RECEPTION").contains(role) && !jwtService.isTokenExpired(token)){
                 // 6. Create our custom principal object
                 CustomUserPrincipal principal = new CustomUserPrincipal(
                         authUserId,
@@ -74,7 +75,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 // 9. Save authenticated user into security context
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("Authentication set successfully");
+
             }
         }catch (Exception ex){
             // 10. If token is invalid/malformed/expired, clear context

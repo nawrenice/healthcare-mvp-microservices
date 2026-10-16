@@ -26,7 +26,7 @@ public class AuthService {
     public AuthResponse userLogin(UserLoginRequest loginRequest){
 
         // Normalized email for lower case
-        String normalizedEmail = loginRequest.getEmail().trim().toLowerCase();
+        String normalizedEmail = loginRequest.getEmail().trim().toLowerCase(java.util.Locale.ROOT);
 
         // 1. Fetch user by email
         User user = userRepository.findByEmail(normalizedEmail)

@@ -29,6 +29,10 @@ public class SecurityConfig {
                 // Disable CSRF because this is a stateless REST API
                 .csrf(csrf -> csrf.disable())
 
+                // Return 401 for missing/invalid credentials, 403 for an authenticated user without permission.
+                .exceptionHandling(errors -> errors
+                        .authenticationEntryPoint((request, response, exception) -> response.sendError(401))
+                        .accessDeniedHandler((request, response, exception) -> response.sendError(403)))
                 // No session should be created; JWT will handle authentication
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -38,7 +42,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Swagger / API docs can be public during development
                         .requestMatchers(
-                                "/swagger-ui/**",
+                                "/swagger-ui.html", "/actuator/health", "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         ).permitAll()
 

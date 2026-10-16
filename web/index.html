@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Careway · Healthcare MVP</title><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head>
+<body>
+<header><a class="brand" href="/">✚ <span>careway</span></a><span class="tag">Healthcare workspace</span><button id="logout" hidden>Sign out</button></header>
+<main>
+<div class="notice">Development demo · Use synthetic information only. Demo data resets on restart.</div>
+<section id="welcome"><p class="eyebrow">CARE, WITH LESS FRICTION</p><h1>A clearer path<br>to your next visit.</h1><p class="intro">Your profile, your care team, and your appointments.<br>One simple place to start.</p></section>
+<div id="message" role="status" aria-live="polite"></div>
+<section id="auth" class="grid">
+<form id="login" class="card"><p class="eyebrow">WELCOME BACK</p><h2>Sign in to your workspace</h2><label>Email<input name="email" type="email" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="primary">Sign in →</button><p class="muted">Trying the doctor workspace? Use <strong>doctor@example.test</strong> with <strong>DemoDoctor123!</strong> in demo mode.</p></form>
+<form id="signup" class="card"><p class="eyebrow">NEW HERE?</p><h2>Create a patient account</h2><label>Full name<input name="name" autocomplete="name" required maxlength="120"></label><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Password<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="72" required></label><button>Create account</button><p class="muted">Use at least 12 characters. Staff accounts are provisioned separately.</p></form>
+</section>
+<section id="workspace" hidden>
+<div class="section-heading"><div><p class="eyebrow" id="role-label">YOUR WORKSPACE</p><h1 id="workspace-title">Good to see you.</h1></div><button id="refresh">Refresh workspace ↻</button></div>
+<nav aria-label="Workspace sections"><a href="#appointments">Appointments</a><a href="#directory">Care team</a><a href="#profile-area">My profile</a></nav>
+<section id="appointments" class="card"><div class="section-heading"><div><p class="eyebrow">WHAT'S NEXT</p><h2>Your appointments</h2></div><span class="tag">30-minute visits</span></div><p class="muted">Showing your latest 100 appointments. Times are displayed in your local time zone.</p><div id="appointment-list"></div></section>
+<div class="grid" id="patient-area">
+<section id="directory" class="card"><p class="eyebrow">FIND YOUR CARE TEAM</p><h2>Available doctors</h2><p class="muted">Directory entries show availability for this scheduling demo.</p><div id="doctor-list"></div></section>
+<form id="booking" class="card"><p class="eyebrow">MAKE TIME FOR YOUR HEALTH</p><h2>Book a visit</h2><label>Doctor<select name="doctorId" id="doctor-select" required><option value="">Select a doctor</option></select></label><label>Visit date and time<input name="startsAt" type="datetime-local" step="1800" required></label><p class="muted">Choose a time corresponding to :00 or :30 UTC. Each appointment is 30 minutes.</p><label>Reason for visit<textarea name="reason" rows="3" maxlength="500" required placeholder="Use a synthetic example, such as a routine checkup"></textarea></label><button class="primary">Book appointment →</button></form>
+</div>
+<section id="profile-area" class="card"><p class="eyebrow">YOUR DETAILS</p><h2 id="profile-title">Patient profile</h2>
+<form id="patient-profile" class="form-grid"><label>Full name<input name="name" required maxlength="255"></label><label>Phone<input name="phone" inputmode="tel" pattern="[0-9]{10,15}" placeholder="10–15 digits"></label><label>Address<input name="address" required maxlength="255"></label><label>Date of birth<input name="dateOfBirth" type="date"></label><label>Gender<input name="gender" required maxlength="255"></label><button class="primary">Save profile</button></form>
+<form id="doctor-profile" class="form-grid" hidden><label>Name<input name="name" required maxlength="120"></label><label>Specialty<input name="specialty" required maxlength="120"></label><label>License number<input name="licenseNumber" required maxlength="80"></label><label>Clinic address<input name="clinicAddress" required maxlength="200"></label><label class="check"><input name="available" type="checkbox">Accept appointments</label><button class="primary">Save doctor profile</button></form>
+</section>
+</section>
+</main><footer>Careway · A learning MVP built around clear, understandable care workflows.</footer>
+</body></html>

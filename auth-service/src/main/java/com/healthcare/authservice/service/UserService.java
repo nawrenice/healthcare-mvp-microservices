@@ -36,8 +36,15 @@ public class UserService {
      * Handles user signup
      */
     public ApiResponse signup(UserSignupRequest signupRequest) {
+        // Public registration must never grant staff privileges. Staff accounts are provisioned separately.
+        if (signupRequest.getRole() != com.healthcare.authservice.entity.Role.PATIENT) {
+            throw new IllegalArgumentException("Public signup is available for PATIENT accounts only");
+        }
+        if (signupRequest.getPassword().getBytes(java.nio.charset.StandardCharsets.UTF_8).length > 72) {
+            throw new IllegalArgumentException("Password must not exceed 72 UTF-8 bytes");
+        }
         // Normalize email to avoid duplicate due to case or spaces
-        String normalizedEmail = signupRequest.getEmail().trim().toLowerCase();
+        String normalizedEmail = signupRequest.getEmail().trim().toLowerCase(java.util.Locale.ROOT);
         // 1. Check if email already exists
         if (userRepository.findByEmail(normalizedEmail).isPresent()) {
             throw new UserAlreadyExistsException(

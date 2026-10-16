@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
         //Normalize email so lookup stays consistent with signup/login
-        String normalizedEmail = email.trim().toLowerCase();
+        String normalizedEmail = email.trim().toLowerCase(java.util.Locale.ROOT);
 
         //load user from database
         User user = userRepository.findByEmail(normalizedEmail)

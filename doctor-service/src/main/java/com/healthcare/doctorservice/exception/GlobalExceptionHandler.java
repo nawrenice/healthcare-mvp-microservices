@@ -10,12 +10,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
 
 
 // @RestControllerAdvice makes this class a global exception handler.
 // It listens for exceptions thrown from controllers/services and sends clean JSON error responses.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<?> business(ResponseStatusException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(Map.of("message", ex.getReason() == null ? "Request rejected" : ex.getReason()));
+    }
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> conflict(Exception ex) {
+        return ResponseEntity.status(409).body(Map.of("message", "Record conflicts with an existing record"));
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> forbidden(Exception ex) {
+        return ResponseEntity.status(403).body(Map.of("message", "Access denied"));
+    }
+
 
 
 
@@ -85,7 +102,7 @@ public class GlobalExceptionHandler {
 
         // Temporary debugging:
         // Prints the complete exception in the application terminal.
-        ex.printStackTrace();
+        // Do not expose stack traces or request contents in API responses.
         ApiResponse response = ApiResponse.builder()
                 .success(false)
                 .message("Something went wrong")

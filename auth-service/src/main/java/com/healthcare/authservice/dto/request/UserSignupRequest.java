@@ -26,7 +26,7 @@ public class UserSignupRequest {
     private String email;
 
     @NotBlank(message = "Password is required") // cannot be blank
-    @Size(min = 6, message = "Password must be at least 6 characters")
+    @Size(min = 12, max = 72, message = "Password must be 12 to 72 characters")
     private String password;
 
     @NotNull(message = "Role is required")
